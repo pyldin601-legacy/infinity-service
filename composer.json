@@ -1,0 +1,15 @@
+{
+  "name": "pldin601/infinity",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Roman Gemini",
+      "email": "roman@homefs.biz"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "nerd-framework/nerd-router": "^1.2"
+  }
+}
