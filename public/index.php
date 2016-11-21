@@ -2,6 +2,8 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+const LENGTH_LIMIT = 128000000;
+
 $randomData = str_repeat('RandomRandom', 512);
 
 $router = new \Nerd\Framework\Routing\Router();
@@ -14,6 +16,8 @@ $router->get('(\d+)\.bin', function ($size) use ($randomData) {
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment');
 
+    $size = min($size, LENGTH_LIMIT);
+
     while ($size > 0) {
         $data = $size >= strlen($randomData) ? $randomData : substr($randomData, 0, $size);
         $size -= strlen($data);
@@ -24,6 +28,8 @@ $router->get('(\d+)\.bin', function ($size) use ($randomData) {
 $router->get('(\d+)\-(\d+)\.bin', function ($speed, $size) use ($randomData) {
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment');
+
+    $size = min($size, LENGTH_LIMIT);
 
     $start = microtime(true);
     $bytes = $speed;
@@ -48,6 +54,8 @@ $router->get('(\d+)\-(\d+)\.bin', function ($speed, $size) use ($randomData) {
 $router->get('random\-(\d+)\.bin', function ($size) use ($randomData) {
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment');
+
+    $size = min($size, LENGTH_LIMIT);
 
     while ($size > 0) {
         $data = $size >= strlen($randomData) ? $randomData : substr($randomData, 0, $size);
