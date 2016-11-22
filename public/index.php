@@ -1,68 +1,51 @@
 <?php
 
+use function App\Generator\generate;
+use function App\Generator\randomThrottle;
+use function App\Generator\send;
+use function App\Generator\throttle;
+
 require __DIR__ . '/../vendor/autoload.php';
 
-const LENGTH_LIMIT = 128000000;
-
-$randomData = str_repeat('RandomRandom', 512);
+const LENGTH_LIMIT = 128 * 1024 * 1024;
 
 $router = new \Nerd\Framework\Routing\Router();
 
 $router->get('/', function () {
-    require __DIR__ . '/../resources/view/home.html';
+    require __DIR__ . '/../resources/view/home.phtml';
 });
 
-$router->get('(\d+)\.bin', function ($size) use ($randomData) {
+$router->get('(\d+)\.bin', function ($size) {
+    $size = min($size, LENGTH_LIMIT);
+
+    $generator = generate($size);
+
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment');
 
-    $size = min($size, LENGTH_LIMIT);
-
-    while ($size > 0) {
-        $data = $size >= strlen($randomData) ? $randomData : substr($randomData, 0, $size);
-        $size -= strlen($data);
-        echo $data;
-    }
+    send($generator);
 });
 
-$router->get('(\d+)\-(\d+)\.bin', function ($speed, $size) use ($randomData) {
+$router->get('(\d+)\-(\d+)\.bin', function ($speed, $size) {
+    $size = min($size, LENGTH_LIMIT);
+
+    $generator = throttle($speed, generate($size));
+
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment');
 
-    $size = min($size, LENGTH_LIMIT);
-
-    $start = microtime(true);
-    $bytes = $speed;
-
-    while ($size > 0) {
-        $data = $size >= strlen($randomData) ? $randomData : substr($randomData, 0, $size);
-
-        $bytes += strlen($data);
-        $size -= strlen($data);
-
-        $bps = $bytes / max(microtime(true) - $start, 1);
-
-        if ($bps > $speed) {
-            $delta = $bps / $speed;
-            usleep($delta * 1000000);
-        }
-
-        echo $data;
-    }
+    send($generator);
 });
 
-$router->get('random\-(\d+)\.bin', function ($size) use ($randomData) {
+$router->get('random\-(\d+)\.bin', function ($size) {
+    $size = min($size, LENGTH_LIMIT);
+
+    $generator = randomThrottle(generate($size));
+
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment');
 
-    $size = min($size, LENGTH_LIMIT);
-
-    while ($size > 0) {
-        $data = $size >= strlen($randomData) ? $randomData : substr($randomData, 0, $size);
-        $size -= strlen($data);
-        usleep(rand(0, 500000));
-        echo $data;
-    }
+    send($generator);
 });
 
 try {
@@ -70,5 +53,7 @@ try {
 } catch (\Nerd\Framework\Routing\RouteNotFoundException $e) {
     http_response_code(404);
     echo $e->getMessage();
+} catch (\Exception $e) {
+    http_response_code(500);
+    echo $e->getMessage();
 }
-

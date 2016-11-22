@@ -11,5 +11,10 @@
   "prefer-stable": true,
   "require": {
     "nerd-framework/nerd-router": "^1.2"
+  },
+  "autoload": {
+    "files": [
+      "src/App/Generator.php"
+    ]
   }
 }

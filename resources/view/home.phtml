@@ -1,0 +1,16 @@
+<html>
+<body>
+    <h1>Examples:</h1>
+    <ul>
+        <li><a href="/<?= 64 * 1024 * 1024 ?>.bin">64 MB file</a></li>
+        <li><a href="/<?= 32 * 1024 ?>-<?= 64 * 1024 * 1024 ?>.bin">64 MB file with speed 32 kB/s</a></li>
+        <li><a href="/random-<?= 64 * 1024 * 1024 ?>.bin">64 MB file with random speed</a></li>
+        <li><a href="/<?= 128 * 1024 * 1024 ?>.bin">128 MB file</a></li>
+        <li><a href="/<?= 128 * 1024 ?>-<?= 128 * 1024 * 1024 ?>.bin">128 MB file with speed 1 MB/s</a></li>
+    </ul>
+    <h2>Changelog</h2>
+    <ul>
+        <li>Limited maximal file size to 128 MB</li>
+    </ul>
+</body>
+</html>
