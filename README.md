@@ -7,7 +7,8 @@ Requires docker to be installed.
 Type in your terminal:
 
 ```
-make run
+make install
+make dev
 ```
 
 Then open in your browser following url [http://localhost:5050/](http://localhost:5050/).
