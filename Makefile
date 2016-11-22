@@ -4,7 +4,7 @@ NAME := "pldin601/infinity-service"
 
 build:
 	@echo $(REVISION) | awk '{ print $$0 + 1 }' > ${REVISION_FILE}
-	@docker build -t ${NAME} --tag ${REVISION} .
+	@docker build -t ${NAME} --tag ${REVISION} --tag latest .
 
 run:
 	@docker run -it --rm -p 5050:80 $(NAME)
