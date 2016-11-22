@@ -12,6 +12,7 @@ const LENGTH_LIMIT = 128 * 1024 * 1024;
 $router = new \Nerd\Framework\Routing\Router();
 
 $router->get('/', function () {
+    $revision = file_get_contents('../.revision');
     require __DIR__ . '/../resources/view/home.phtml';
 });
 
