@@ -16,9 +16,9 @@ $router->get('/', function () {
 });
 
 $router->get('(\d+)\.bin', function ($size) {
-    $size = min($size, LENGTH_LIMIT);
+    $limitedSize = min($size, LENGTH_LIMIT);
 
-    $generator = generate($size);
+    $generator = generate($limitedSize);
 
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment');
@@ -27,9 +27,9 @@ $router->get('(\d+)\.bin', function ($size) {
 });
 
 $router->get('(\d+)\-(\d+)\.bin', function ($speed, $size) {
-    $size = min($size, LENGTH_LIMIT);
+    $limitedSize = min($size, LENGTH_LIMIT);
 
-    $generator = throttle($speed, generate($size));
+    $generator = throttle($speed, generate($limitedSize));
 
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment');
@@ -38,9 +38,9 @@ $router->get('(\d+)\-(\d+)\.bin', function ($speed, $size) {
 });
 
 $router->get('random\-(\d+)\.bin', function ($size) {
-    $size = min($size, LENGTH_LIMIT);
+    $limitedSize = min($size, LENGTH_LIMIT);
 
-    $generator = randomThrottle(generate($size));
+    $generator = randomThrottle(generate($limitedSize));
 
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment');
